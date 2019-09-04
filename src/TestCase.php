@@ -14,6 +14,13 @@ use yii\helpers\Json;
 class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**
+     * Path to fixture files
+     * Default: Yii::$app->basePath . '/_fixtures
+     * @var string
+     */
+    public $fixturePath;
+
+    /**
      * Transaction running before test execution
      * @var Transaction
      */
@@ -43,7 +50,10 @@ class TestCase extends \PHPUnit\Framework\TestCase
      */
     public function loadFixtures($fixtures): void
     {
-        $fixtureDir = __DIR__ . DIRECTORY_SEPARATOR . '_fixtures' . DIRECTORY_SEPARATOR;
+        if (empty($this->fixturePath)) {
+            $this->fixturePath = Yii::$app->basePath . DIRECTORY_SEPARATOR . '_fixtures' . DIRECTORY_SEPARATOR;
+        }
+        $fixtureDir = rtrim($this->fixturePath, '/\\') . DIRECTORY_SEPARATOR;
         // load only unloaded fixtures
         foreach ((array)$fixtures as $name) {
             if (empty($name)) {
