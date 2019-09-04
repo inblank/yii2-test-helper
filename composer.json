@@ -1,0 +1,31 @@
+{
+    "name": "inblank/yii2-test-helper",
+    "description": "Helper classes for PHPUnit tests in YII2 modules",
+    "keywords": [
+        "yii2",
+        "database"
+    ],
+    "homepage": "http://www.inblank.ru/",
+    "type": "yii2-extension",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Pavel Aleksandrov",
+            "email": "inblank@yandex.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "~7.2",
+        "yiisoft/yii2": "~2.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~8.3",
+        "roave/security-advisories": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "inblank\\testhelper\\": "src"
+        }
+    }
+}
