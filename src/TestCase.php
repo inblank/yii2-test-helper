@@ -74,6 +74,10 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 }
                 $fixture = $extension === 'php' ? include $fileName : Json::decode(file_get_contents($fileName));
                 foreach ($fixture as $tableName => $data) {
+                    if (empty($data) || !is_array($data)) {
+                        // empty or incorrect data
+                        continue;
+                    }
                     reset($data);
                     $defaultRow = array_fill_keys(array_keys(current($data)), null);
                     $defaultRowLength = count($defaultRow);
