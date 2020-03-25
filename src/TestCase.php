@@ -73,6 +73,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
                     continue;
                 }
                 $fixture = $extension === 'php' ? include $fileName : Json::decode(file_get_contents($fileName));
+                $db = Yii::$app->getDb();
                 foreach ($fixture as $tableName => $data) {
                     if (empty($data) || !is_array($data)) {
                         // empty or incorrect data
@@ -85,7 +86,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
                         return array_slice(array_merge($defaultRow, $row), 0, $defaultRowLength);
                     }, $data);
                     try {
-                        Yii::$app->getDb()->createCommand()->batchInsert($tableName, array_keys(current($data)), $data)->execute();
+                        $currentRow = current($data);
+                        $db->createCommand()->batchInsert($tableName, array_keys($currentRow), $data)->execute();
+                        // fix sequence for Postgres if table contains primary key 'id'
+                        if (($db->driverName === 'pgsql') && array_key_exists('id', $currentRow)) {
+                            $db->createCommand($db->queryBuilder->resetSequence($tableName))->execute();
+                        }
                     } catch (Exception $e) {
                         throw new RuntimeException('Fixture error: ' . $e->getMessage());
                     }
